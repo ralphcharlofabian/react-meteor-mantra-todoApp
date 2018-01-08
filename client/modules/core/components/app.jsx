@@ -34,22 +34,26 @@ class App extends Component {
             hideCompleted: !this.state.hideCompleted,
         });
     };
-
-
+    deleteThisTask(taskId) {
+        const { removeUserTask } = this.props;
+        removeUserTask(taskId);
+    }
+    toggleChecked( taskId, isChecked ) {
+        const { toggleChecked } = this.props;
+        toggleChecked(taskId,isChecked);
+    }
+    editThisTask(taskId,editedTaskName,editedTaskDate){
+        console.log(taskId,editedTaskName,editedTaskDate);
+        
+        const { editUserTask } = this.props;
+        editUserTask(taskId, editedTaskName,editedTaskDate);
+    }
 
     handleSubmit(event) {
         event.preventDefault();
 
         const { addUserTask } = this.props;
         const { addnewTypedTask, addnewDateTask } = this.refs;
-
-        // Tasks.insert({
-        //     text:addnewTypedTask.input.value,
-        //     createdAt: addnewDateTask.input.value
-            
-        // });
-        // console.log(addnewDateTask);
-
 
         addUserTask(
             addnewTypedTask.input.value,
@@ -66,8 +70,14 @@ class App extends Component {
         if (this.state.hideCompleted) {
             filteredTasks = filteredTasks.filter(task => !task.checked);
         }
+        console.log(filteredTasks);
         return filteredTasks.map((task) => (
-        <Task key={task._id} task = {task} />
+        <Task 
+            key = {task._id}
+            task = {task}
+            deleteThisTask ={this.deleteThisTask.bind(this)}
+            editThisTask = {this.editThisTask.bind(this)}
+            toggleChecked ={this.toggleChecked.bind(this)}/>
       ));
     }
 
@@ -92,10 +102,8 @@ class App extends Component {
         return (
         <MuiThemeProvider>
             <div>
-
-            
                 <Dialog
-                title="Dialog With Actions"
+                title="Add New Task"
                 actions={actions}
                 modal={false}
                 open={this.state.open}
@@ -114,10 +122,10 @@ class App extends Component {
                 <Subheader>Incomplete Tasks ({this.props.incompleteCount}) </Subheader> 
                 <RaisedButton primary={true} label="Add Task" onClick={this.handleOpen.bind(this)} />
 
-          </header>
-          <ul>
-              {this.renderTasks()}
-          </ul>
+            </header>
+            <div>
+                {this.renderTasks()}
+            </div>
           </div>
         </MuiThemeProvider>
       );

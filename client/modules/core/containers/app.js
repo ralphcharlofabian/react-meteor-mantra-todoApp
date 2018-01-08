@@ -1,6 +1,7 @@
 import {useDeps, composeAll, composeWithTracker, compose} from 'mantra-core';
 
 import App from '../components/app.jsx';
+import Task from '../components/task.jsx';
 
 export const composer = ({context}, onData) => {
     const {Meteor, Collections} = context();
@@ -20,10 +21,13 @@ export const composer = ({context}, onData) => {
 
 export const depsMapper = (context, actions) => (console.log(actions), {
     context: () => context,
-    addUserTask: actions.app.addUserTask
+    addUserTask: actions.app.addUserTask,
+    removeUserTask: actions.app.removeUserTask,
+    toggleChecked: actions.app.toggleChecked,
+    editUserTask : actions.app.editUserTask
 });
 
 export default composeAll(
   composeWithTracker(composer),
   useDeps(depsMapper)
-)(App);
+)(App,Task);
