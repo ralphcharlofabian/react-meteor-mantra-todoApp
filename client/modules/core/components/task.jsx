@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import MediaQuery from 'react-responsive';
 import {Tasks} from '../../../../lib/collections/task.js';
 import Checkbox from 'material-ui/Checkbox';
 import {List, ListItem} from 'material-ui/List';
@@ -13,15 +13,20 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuItem from 'material-ui/MenuItem';
 const style = {
     height: 100,
     width: 500,
     margin: 5,
     textAlign: 'left',
     display: 'inline-block',
+    //backgroundColor:'red'
 };
 
-//
+
 
 export default class Task extends Component {
     constructor (props){
@@ -30,10 +35,26 @@ export default class Task extends Component {
             checked: props.task.checked,
             open: false,
             editTask: props.task.text,
-            editTaskDate: props.task.createdAt
+            editTaskDate: props.task.createdAt,
+            taskOnTrack: true
 
         };
     }
+    // componentWillMount(){
+    //     const {task} = this.props;
+    //     if(moment( Date.now()).isBefore(task.createdAt)){
+    //         this.setState({taskOnTrack:true});
+    //     } else{
+    //         //askOnTrack:false,
+    //     }
+    // };
+
+    // taskDateChecker() {
+    //     const {task} = this.props;
+    //     if(moment( Date.now()).isBefore(task.createdAt)){
+    //         console.log(true);
+    //     }
+    // }
 
     onToggleCheckbox(event, isChecked) {
         this.setState({
@@ -118,10 +139,14 @@ export default class Task extends Component {
                     primaryText={this.props.task.text}
                     secondaryText={ moment(this.props.task.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                     rightIconButton ={
-                        <div>
-                            <FlatButton label="Edit" onClick={this.handleOpen.bind(this)}/>
-                            <FlatButton label="Delete" secondary={true} onClick={deleteThisTask.bind(this,task._id)}/>
-                        </div>
+                        
+                            <IconMenu
+                                iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+                                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                                targetOrigin={{horizontal: 'right', vertical: 'top'}}>
+                                <MenuItem label="Edit" primaryText="Edit" onClick={this.handleOpen.bind(this)}/>
+                                <MenuItem label="Delete" primaryText="Delete" secondary={true} onClick={deleteThisTask.bind(this,task._id)}/>
+                            </IconMenu>
                         }
                     />
                     

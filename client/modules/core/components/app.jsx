@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Subheader from 'material-ui/Subheader';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
+
 class App extends Component {
     constructor (props) {
         super(props);
@@ -65,6 +66,18 @@ class App extends Component {
         this.setState({open: false});
     }
 
+    deleteAllCheckedTask() {
+        let allTask = this.props.tasks;
+        
+        return allTask.map((task)=>{
+            if(task.checked === true){
+                const { removeUserTask } = this.props;
+                removeUserTask(task._id);
+            }
+            
+        });
+    }
+
     renderTasks() {
         let filteredTasks = this.props.tasks;
         if (this.state.hideCompleted) {
@@ -102,6 +115,7 @@ class App extends Component {
         return (
         <MuiThemeProvider>
             <div>
+            
                 <Dialog
                 title="Add New Task"
                 actions={actions}
@@ -113,18 +127,20 @@ class App extends Component {
                 floatingLabelText="Type to add new tasks..."
                 ref = "addnewTypedTask"
                 />
-                <DatePicker hintText="Please set your Date" openToYearSelection={true} ref="addnewDateTask"/>
+                <DatePicker 
+                    hintText="Please set your Date"
+                    openToYearSelection={true}
+                    ref="addnewDateTask"
+                    minDate={new Date()}/>
                 </Dialog>
           <AppBar
                 title="Todo List"
             />
-             <header>
-                <Subheader>Incomplete Tasks ({this.props.incompleteCount}) </Subheader> 
-                <RaisedButton primary={true} label="Add Task" onClick={this.handleOpen.bind(this)} />
-
-            </header>
             <div>
+                <RaisedButton primary={true} label="Add Task" onClick={this.handleOpen.bind(this)} style={{marginTop:20}} />
+                <Subheader>Incomplete Tasks: {this.props.incompleteCount} </Subheader> 
                 {this.renderTasks()}
+                <FlatButton secondary={true} label="Delete All Checked Task" onClick={this.deleteAllCheckedTask.bind(this)} style={{marginTop:20, marginLeft:280}} />
             </div>
           </div>
         </MuiThemeProvider>
